@@ -22,5 +22,5 @@ routes.forEach((route) => {
 });
 
 app.listen(80, function(){
-	console.log('App is listening on port 80');
+	console.log('App is listening on port 80\nhttp://localhost:80');
 });

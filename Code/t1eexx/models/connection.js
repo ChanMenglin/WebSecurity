@@ -2,9 +2,9 @@ const mysql = require('mysql');
 exports.getConnection = function(){
 	let connection = mysql.createConnection({
 		host: 'localhost',
-		database: 'imooc_safety',
+		database: 'safety',
 		user: 'root',
-		password: '123456'
+		password: '123456789'
 	});
 	connection.connect();
 	return connection;
