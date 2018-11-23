@@ -23,7 +23,7 @@ XSS攻击注入点：
 ### 1.2 HTML属性
 ```javascript
 /**
- * 对 HTML 节点内容及属性进行 XSS 攻击的预防代码
+ * 对 HTML 节点内容及属性进行 XSS 攻击的预防代码
  * 将 HTML 节点内容及属性转译为 HTML 实体
  * 适用于绝对禁止用户输入 HTML 内容的场景
  */
@@ -41,7 +41,7 @@ var escapeHTMLProperty = function( str ) {
 }
 ```
 ### 1.3 JavaScript代码  
-JavaScript中可以直接使用 `JSON.stringify( str )` 方法进行转译
+JavaScript中可以直接使用 `JSON.stringify( str )` 方法进行转译
 
 ### 1.4 富文本
 采用过滤的方式进行防御
@@ -114,7 +114,7 @@ var xssFilter = function ( html ) {
 }
 ```
 
-### 1.5 [CSP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP)：内容安全策略
+### 1.5 [CSP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP) (Content Security Policy)：内容安全策略
 可指定可执行的内容。
 
 
