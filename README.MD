@@ -132,7 +132,7 @@ var xssFilter = function ( html ) {
 
 ### 2.1 SameSite Cookie，防止 CSRF 攻击
 此方法可有效防止对用户身份( Cookies )的冒用，但仍然可以进行匿名攻击，需要对匿名用户的权限进行控制。(此方法的[兼容性](https://caniuse.com/#search=SameSite)不好)  
-samesite 属性设置：[SameSite Cookie，防止 CSRF 攻击](http://www.cnblogs.com/ziyunfei/p/5637945.html)  
+[SameSite Cookie，防止 CSRF 攻击](http://www.cnblogs.com/ziyunfei/p/5637945.html)  
 [SameSite - OWASP](https://www.owasp.org/index.php/SameSite)
 
 ### 2.2 在前端页面加入验证信息
