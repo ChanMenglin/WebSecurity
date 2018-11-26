@@ -126,7 +126,7 @@ var xssFilter = function ( html ) {
 **CSRF**：是一种常见的冒用用户身份的方法  
 > **攻击特点**：
 > 1. B 网站向 A 网站请求
-> 2. 请求带 A 网站 Cookies
+> 2. 请求带 A 网站 Cookies
 > 3. 不访问 A 网站前端
 > 4. referer 为 B 网站
 
