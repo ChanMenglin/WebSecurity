@@ -115,15 +115,40 @@ var xssFilter = function ( html ) {
 ```
 
 ### 1.5 [CSP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP) (Content Security Policy)：内容安全策略
-可指定可执行的内容。
+可指定可执行的内容。  
+```html
+<-这只是一个示例，具体的写法以及参数的意义请参见上方的链接->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://*; child-src 'none';">
+```
 
+## 2. 跨站请求伪造 CSRF(Cross Site Request Forgy)
 
+**CSRF**：是一种常见的冒用用户身份的方法  
+> **攻击特点**：
+> 1. B 网站向 A 网站请求
+> 2. 请求带 A 网站 Cookies
+> 3. 不访问 A 网站前端
+> 4. referer 为 B 网站
 
-## 2. 跨站请求伪造 CSRF
+### 2.1 SameSite Cookie，防止 CSRF 攻击
+此方法可有效防止对用户身份( Cookies )的冒用，但仍然可以进行匿名攻击，需要对匿名用户的权限进行控制。(此方法的[兼容性](https://caniuse.com/#search=SameSite)不好)  
+samesite 属性设置：[SameSite Cookie，防止 CSRF 攻击](http://www.cnblogs.com/ziyunfei/p/5637945.html)  
+[SameSite - OWASP](https://www.owasp.org/index.php/SameSite)
 
-**CSRF**：是一种常见的冒用用户身份的方法
+### 2.2 在前端页面加入验证信息
+此方法可防止 CSRF 攻击中不访问被攻击网站前端的问题
+1. 验证码  
+[ccap](https://github.com/DoubleSpout/ccap) 这是一个生成验证码的库。这种方式对用户体验有较大影响，不适宜大量使用。
+2. token  
+```javascript
+// 此变量为随机生成并取整，将会放在页面表单及Cookies中
+var csrfToken = parseInt(Math.random() * 9999999, 10);
+```
 
-## 3. 前端 Cookoes 安全性
+### 2.3 通过 referer 禁止来自第三方网站的强求
+[[JS] js获取referer,兼容各种浏览器](https://www.51-n.com/t-4016-1-1.html)
+
+## 3. 前端 Cookies 安全性
 
 ## 4. 点击劫持
 
