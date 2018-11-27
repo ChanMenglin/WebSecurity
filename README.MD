@@ -148,7 +148,111 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 ### 2.3 通过 referer 禁止来自第三方网站的强求
 [[JS] js获取referer,兼容各种浏览器](https://www.51-n.com/t-4016-1-1.html)
 
-## 3. 前端 Cookies 安全性
+## 3. 前端 [Cookies](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Cookies) 安全性
+
+**Cookies**：前端数据存储，  
+### 3.1  Cookies 的特点
+* 前端数据存储
+* 后端可通过 http 头进行设置
+* 请求时通过 http 头传给后端
+* 前端可读写
+* 遵守同源策略  
+> 同源策略：对于 Cookies 而言，同一个源下的 Cookies 才能读写。  
+> 源：当协议、域名、端口全部一致时才叫同源。
+
+### 3.2 Cookies 的特性
+* 域名：指定 Cookies 的使用范围。
+* 有效期：指定 Cookies 的有效期，过期后就会失效。
+* 路径：指定 Cookies 作用于网站上的哪一级，具体为 URL 的层级。可以为不同层级的 URL 设置不同的 Cookies，只有当这个层级的页面被访问时对应的 Cookies 才能被访问。
+* http-only：Cookies 只能被 HTTP协议 使用。
+* Secure：指定 Cookies 是否只能在 HTTPS 的网站中使用，指定后在 HTTP 的网站中则不能使用。
+* SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](###%202.1%20SameSite%20Cookie,防止%20CSRF%20攻击))
+> 浏览器开发者工具中查看 Cookies 信息：
+> 在 浏览器的开发者工具 -> Application/存储空间 -> Cookies 就可以找到 Cookies 信息。
+> * Name（名称）: 健
+> * Value（值）: 值
+> * Domain（域）: 域名
+> * Path（路径）: 路径
+> * Expires / Max-Age（过期时间）: 有效期（Session 表示只在会话内有效）
+> * Size（大小）: 大小
+> * HTTP（HTTP）: http-only
+> * Secure（安全）: Secure
+> * SameSite（相同站点）: SameSite（不是所有浏览器都有此属性）  
+>
+> 英文名称参考Google Chrome 70.0.3538.102（正式版本）（64 位）,中文名称参考Safari 浏览器12.0.1 (14606.2.104.1.1)
+
+### 3.3 Cookies 操作
+* 读取 Cookies：document.cookie
+* 设置 Cookies 有效期：document.cookie = 'a=1;expires=Tue, 27 Nov 2018 03:40:29 GMT'
+* 删除 Cookies：并没有删除 Cookies 的方法，但可以通过给 Cookies 的有效期设置一个过去的时间，就可以删除 Cookies。
+> expires 的值为过期时间，且只能为此格式，此格式时间的快速获取方法：  
+> ```javascript
+> var d = new Date();
+> d.toGMTString();
+> ```
+
+### 3.4 Cookies 作用
+* 存储个性化设置
+* 存储未登录时用户的唯一标识
+* 存储已登陆用户的凭证
+* 存储其他业务数据（页面缓存）
+
+> Cookies - 登陆用户凭证
+> * 前端提交用户信息
+> * 后端验证用户信息
+> * 后端通过 HTTP 头设置用户凭证
+> * 后续访问时后端先验证用户凭证
+
+### 3.5 Cookies 安全问题
+
+#### 3.5.1 生成用户凭证
+* 用户ID，使用用户ID作为用户的标示并不安全，有被篡改的风险
+* 用户ID + 签名：可防止 用户ID 被篡改，Cookies 中会同时存储用户ID和签名，作为校验。
+```javascript
+// 加密签名模块
+// crypto 为 NodeJs 自带的加密模块
+import crypto from 'crypto';
+var crypt = {};
+// 随机的字符，越复杂越安全
+const key = '#@56562366&##%';
+crypt.cryptUserId = function( userId ) {
+    var sign = crypto.createHmac('sha256', key)
+    sing.update( userId + '' );
+    return sign.digest( 'hex' );
+}
+export crypt;
+```
+* SessionId：在 Cookies 中不存储任何用户信息，后端可通过 SessionId 判断用户的身份
+```javascript
+/** 
+* SessionId
+*/ 
+var session = {};
+var cache = {};
+
+session.set = function( userId, obj) {
+    var sessionId = Math.random();
+    if ( !cache[sessionId] ) {
+        cache[sessionId] = {};
+    }
+    cache[sessionId].content = obj;
+    return sessionId;
+}
+
+session.get = function( userId ) {
+    return cache[sessionId] && cache[sessionId].content;
+}
+export session;
+```
+
+#### 3.5.2 Cookies 和 XSS 的关系
+* XSS 可能偷取 Cookies
+* http-only 的 Cookies 不会被偷（[3.2 Cookies 的特性](###%203.2%20Cookies%20的特性)）
+
+#### 3.5.3 Cookies 和 CSRF 的关系
+* CSRF 利用了用户 Cookies
+* 攻击站点无法读写 Cookies（[2.2 在前端页面加入验证信息](###%202.2%20在前端页面加入验证信息)）
+* 最好能阻止第三方使用 Cookies（[2.1 SameSite Cookie，防止 CSRF 攻击](###%202.1%20SameSite%20Cookie,防止%20CSRF%20攻击)）
 
 ## 4. 点击劫持
 
