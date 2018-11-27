@@ -168,9 +168,9 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 * Secure：指定 Cookies 是否只能在 HTTPS 的网站中使用，指定后在 HTTP 的网站中则不能使用。
 * SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](###%202.1%20SameSite%20Cookie,防止%20CSRF%20攻击))
 > 浏览器开发者工具中查看 Cookies 信息：
-> 在 浏览器的开发者工具 -> Application/存储空间 -> Cookies 就可以找到 Cookies 信息。
+> 在 浏览器的开发者工具 -> Application/存储空间 -> Cookies 就可以找到 Cookies 信息。
 > * Name（名称）: 健
-> * Value（值）: 值
+> * Value（值）: 值
 > * Domain（域）: 域名
 > * Path（路径）: 路径
 > * Expires / Max-Age（过期时间）: 有效期（Session 表示只在会话内有效）
@@ -245,7 +245,7 @@ session.get = function( userId ) {
 export session;
 ```
 
-#### 3.5.2 Cookies 和 XSS 的关系
+#### 3.5.2 Cookies 和 XSS 的关系
 * XSS 可能偷取 Cookies
 * http-only 的 Cookies 不会被偷（[3.2 Cookies 的特性](###%203.2%20Cookies%20的特性)）
 
