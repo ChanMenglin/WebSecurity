@@ -166,7 +166,7 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 * 路径：指定 Cookies 作用于网站上的哪一级，具体为 URL 的层级。可以为不同层级的 URL 设置不同的 Cookies，只有当这个层级的页面被访问时对应的 Cookies 才能被访问。
 * http-only：Cookies 只能被 HTTP协议 使用。
 * Secure：指定 Cookies 是否只能在 HTTPS 的网站中使用，指定后在 HTTP 的网站中则不能使用。
-* SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](###%202.1%20SameSite%20Cookie,防止%20CSRF%20攻击))
+* SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](###-2.1-SameSite-Cookie,防止-CSRF-攻击))
 > 浏览器开发者工具中查看 Cookies 信息：
 > 在 浏览器的开发者工具 -> Application/存储空间 -> Cookies 就可以找到 Cookies 信息。
 > * Name（名称）: 健
@@ -247,12 +247,39 @@ export session;
 
 #### 3.5.2 Cookies 和 XSS 的关系
 * XSS 可能偷取 Cookies
-* http-only 的 Cookies 不会被偷（[3.2 Cookies 的特性](###%203.2%20Cookies%20的特性)）
+* http-only 的 Cookies 不会被偷（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
 
 #### 3.5.3 Cookies 和 CSRF 的关系
 * CSRF 利用了用户 Cookies
-* 攻击站点无法读写 Cookies（[2.2 在前端页面加入验证信息](###%202.2%20在前端页面加入验证信息)）
-* 最好能阻止第三方使用 Cookies（[2.1 SameSite Cookie，防止 CSRF 攻击](###%202.1%20SameSite%20Cookie,防止%20CSRF%20攻击)）
+* 攻击站点无法读写 Cookies（[2.2 在前端页面加入验证信息](###-2.2-在前端页面加入验证信息)）
+* 最好能阻止第三方使用 Cookies（[2.1 SameSite Cookie，防止 CSRF 攻击](###-2.1-SameSite-Cookie,防止-CSRF-攻击)）
+
+### 3.6 Cookies 安全策略
+* 签名防篡改（[3.5.1 生成用户凭证](####-3.5.1-生成用户凭证)）
+* 私有变换（加密）
+```javascript
+// node 中的加密
+import crypto from 'crypto';
+
+// 密钥
+var key = '22e323##%&@%#$565';// 越复杂，越安全
+
+// 加密
+// 创建加密对象
+var cipher = crypto.createCipher('des', key);
+cipher.update('hello world', 'utf8', 'hex');
+text += cipher.final('hex');
+
+// 解密
+// 创建解密对象
+var decipher = crypto.createDecipher('des', key);
+decipher.update(text, 'hex', 'utf8');
+originalText += decipher.final('utf8');
+// 加密和解密过程均为流式输出，因此要采用 += 接收，否则只会有部分内容。
+```
+* heep-only（防止XSS）（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
+* secure（防止传输过程中的窃听）（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
+* SameSite（[2.1 SameSite Cookie，防止 CSRF 攻击](###-2.1-SameSite-Cookie,防止-CSRF-攻击)）
 
 ## 4. 点击劫持
 
