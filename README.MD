@@ -8,19 +8,26 @@
 
 * 私密性
 * 可靠性
+
 ---
+
 * 代码层面
 * 架构层面
 * 运维层面
 
 ---
+[MDN Web 文档 - Web 安全](https://developer.mozilla.org/zh-CN/docs/Web/Security)
+
 ## 1. 跨站脚本攻击 XSS (Cross Site Scripting) 
 
 XSS攻击注入点：
-### 1.1 HTML节点内容  
+
+### 1.1 HTML节点内容
+
 可对用户输入进行转译处理
 
 #### 1.1.1 HTML属性
+
 ```javascript
 /**
  * 对 HTML 节点内容及属性进行 XSS 攻击的预防代码
@@ -40,12 +47,17 @@ var escapeHTMLProperty = function( str ) {
     return str;
 }
 ```
-#### 1.1.2 JavaScript 代码  
+
+#### 1.1.2 JavaScript 代码
+
 JavaScript 中可以直接使用 `JSON.stringify( str )` 方法进行转译
 
 ### 1.2 富文本
+
 采用过滤的方式进行防御
+
 #### 1.2.1 黑名单过滤
+
 ```javascript
 /**
 * 采用 黑名单过滤 对富文本内容进行过滤
@@ -61,13 +73,17 @@ var xssFilter = function ( html ) {
     return html;
 }
 ```
+
 #### 1.2.2 白名单过滤
+
 白名单过滤需要先解析 HTML。  
 **方法一**：这里采用 [cheerio](https://cheerio.js.org) 这个库进行解析。(cheerio的使用与 jQuery 类似，比较容易上手)
+
 ```shell
 # 安装 cheerio
 npm install cheerio --save-dev
 ```
+
 ```javascript
 /**
  * 采用 白名单过滤+cheerio 对富文本内容进行过滤
@@ -97,11 +113,14 @@ var xssFilter = function ( html ) {
     return html;
 }
 ```
+
 **方法二**：使用第三方 XSS 白名单防御库 [js-xss](https://github.com/leizongmin/js-xss)
+
 ```shell
 # 安装 js-xss
 npm install xss --save-dev
 ```
+
 ```javascript
 /**
  * 采用 白名单过滤+js-xss 对富文本内容进行过滤
@@ -115,7 +134,9 @@ var xssFilter = function ( html ) {
 ```
 
 ### 1.3 [CSP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP) (Content Security Policy)：内容安全策略
-可指定可执行的内容。  
+
+可指定可执行的内容。
+
 ```html
 <-这只是一个示例，具体的写法以及参数的意义请参见上方的链接->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://*; child-src 'none';">
@@ -131,27 +152,36 @@ var xssFilter = function ( html ) {
 > 4. referer 为 B 网站
 
 ### 2.1 SameSite Cookie，防止 CSRF 攻击
+
 此方法可有效防止对用户身份( Cookies )的冒用，但仍然可以进行匿名攻击，需要对匿名用户的权限进行控制。(此方法的[兼容性](https://caniuse.com/#search=SameSite)不好)  
 [SameSite Cookie，防止 CSRF 攻击](http://www.cnblogs.com/ziyunfei/p/5637945.html)  
 [SameSite - OWASP](https://www.owasp.org/index.php/SameSite)
 
 ### 2.2 在前端页面加入验证信息
+
 此方法可防止 CSRF 攻击中不访问被攻击网站前端的问题
-1. 验证码  
+
+1. 验证码
+
 [ccap](https://github.com/DoubleSpout/ccap) 这是一个生成验证码的库。这种方式对用户体验有较大影响，不适宜大量使用。
-2. token  
+
+2. token
+
 ```javascript
 // 此变量为随机生成并取整，将会放在页面表单及Cookies中
 var csrfToken = parseInt(Math.random() * 9999999, 10);
 ```
 
 ### 2.3 通过 referer 禁止来自第三方网站的强求
-[[JS] js获取referer,兼容各种浏览器](https://www.51-n.com/t-4016-1-1.html)
+
+[[JS] js 获取 referer,兼容各种浏览器](https://www.51-n.com/t-4016-1-1.html)
 
 ## 3. 前端 [Cookies](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Cookies) 安全性
 
-**Cookies**：前端数据存储，  
+**Cookies**：前端数据存储
+
 ### 3.1  Cookies 的特点
+
 * 前端数据存储
 * 后端可通过 http 头进行设置
 * 请求时通过 http 头传给后端
@@ -161,6 +191,7 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 > 源：当协议、域名、端口全部一致时才叫同源。
 
 ### 3.2 Cookies 的特性
+
 * 域名：指定 Cookies 的使用范围。
 * 有效期：指定 Cookies 的有效期，过期后就会失效。
 * 路径：指定 Cookies 作用于网站上的哪一级，具体为 URL 的层级。可以为不同层级的 URL 设置不同的 Cookies，只有当这个层级的页面被访问时对应的 Cookies 才能被访问。
@@ -182,6 +213,7 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 > 英文名称参考Google Chrome 70.0.3538.102（正式版本）（64 位）,中文名称参考Safari 浏览器12.0.1 (14606.2.104.1.1)
 
 ### 3.3 Cookies 操作
+
 * 读取 Cookies：document.cookie
 * 设置 Cookies 有效期：document.cookie = 'a=1;expires=Tue, 27 Nov 2018 03:40:29 GMT'
 * 删除 Cookies：并没有删除 Cookies 的方法，但可以通过给 Cookies 的有效期设置一个过去的时间，就可以删除 Cookies。
@@ -192,6 +224,7 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 > ```
 
 ### 3.4 Cookies 作用
+
 * 存储个性化设置
 * 存储未登录时用户的唯一标识
 * 存储已登陆用户的凭证
@@ -206,8 +239,10 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 ### 3.5 Cookies 安全问题
 
 #### 3.5.1 生成用户凭证
+
 * 用户ID，使用用户ID作为用户的标示并不安全，有被篡改的风险
 * 用户ID + 签名：可防止 用户ID 被篡改，Cookies 中会同时存储用户ID和签名，作为校验。
+
 ```javascript
 // 加密签名模块
 // crypto 为 NodeJs 自带的加密模块
@@ -222,7 +257,9 @@ crypt.cryptUserId = function( userId ) {
 }
 export crypt;
 ```
+
 * SessionId：在 Cookies 中不存储任何用户信息，后端可通过 SessionId 判断用户的身份
+
 ```javascript
 /** 
 * SessionId
@@ -246,17 +283,21 @@ export session;
 ```
 
 #### 3.5.2 Cookies 和 XSS 的关系
+
 * XSS 可能偷取 Cookies
 * http-only 的 Cookies 不会被偷（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
 
 #### 3.5.3 Cookies 和 CSRF 的关系
+
 * CSRF 利用了用户 Cookies
 * 攻击站点无法读写 Cookies（[2.2 在前端页面加入验证信息](###-2.2-在前端页面加入验证信息)）
 * 最好能阻止第三方使用 Cookies（[2.1 SameSite Cookie，防止 CSRF 攻击](###-2.1-SameSite-Cookie,防止-CSRF-攻击)）
 
 ### 3.6 Cookies 安全策略
+
 * 签名防篡改（[3.5.1 生成用户凭证](####-3.5.1-生成用户凭证)）
 * 私有变换（加密）
+
 ```javascript
 // node 中的加密
 import crypto from 'crypto';
@@ -277,6 +318,7 @@ decipher.update(text, 'hex', 'utf8');
 originalText += decipher.final('utf8');
 // 加密和解密过程均为流式输出，因此要采用 += 接收，否则只会有部分内容。
 ```
+
 * heep-only（防止XSS）（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
 * secure（防止传输过程中的窃听）（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
 * SameSite（[2.1 SameSite Cookie，防止 CSRF 攻击](###-2.1-SameSite-Cookie,防止-CSRF-攻击)）
@@ -289,15 +331,19 @@ originalText += decipher.final('utf8');
 > * 通过点击能进行的操作都可以通过点击劫持进行
 
 ### 4.1 点击劫持的原理
+
 将目标网站作为一个 iframe 嵌入到攻击者网站中，并在视觉上进行隐藏（如调整透明度），用户看不见这个 iframe。对用户的点击进行引导，使用户进行一些指定的操作（如某种游戏），从而实现特定的目的（如银行转账）。  
 
 ### 4.2 点击劫持的前提
+
 目标网站能够被攻击网站嵌套在 iframe 中。  
 
 ### 4.3 点击劫持的防御
+
 未内嵌的网站与内嵌网站的区别在于，未内嵌的网站的 `top === window` 和 `top.location === window.location` 均为 `true`。而在 iframe 中 `top` 指向最外层的 `window`，`window` 指向 iframe 本身，结果为 `false`。
 
 * JavaScript 禁止内嵌
+
 ```javascript
 /** 
 * JavaScript 禁止内嵌
@@ -309,11 +355,58 @@ if ( top.location !== window.location ) {
     top.location = window.location;
 }
 ```
+
 * [X-FRAME-OPTIONS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/X-Frame-Options) 禁止内嵌（推荐）
 * 辅助手段 [2.2 在前端页面加入验证信息](###-2.2-在前端页面加入验证信息)
 
 
 ## 5. 传输过程安全问题
+
+HTTP 传输窃听和篡改：由于 HTTP 采用明文传输信息，导致请求发送过程中的所有设备（浏览器、代理服务器、链路、服务器等）均可读取甚至篡改发送的数据。
+
+```bash
+# 查看向一个 url 发送请求时会经过那些中间节点
+# 其中所展示的任何一个节点均可进行 HTTP 传输窃听和篡改
+# Mac OS/Linux
+traceroute url
+# Windows
+tracert url
+```
+
+### 5.1 HTTP 传输窃听和篡改的危害
+
+* 窃听通过网络传输的一切信息，包括敏感信息（账号、密码等）
+* 插入广告
+* 重定向网站（如钓鱼网站）
+* 无法防御的 XSS 和 CSRF 攻击
+
+### 5.2 HTTPS TLS(SSL) 加密
+
+确认服务器身份的原理：
+
+1. 浏览器 -> CA 获取内置信任列表
+2. 服务器 -> CA 申请证书
+3. CA -> 服务器 验证域名，颁发证书
+4. 浏览器 -> 服务器 发起请求
+5. 服务器 -> 浏览器 出具证书
+6. 浏览器 验证通过
+
+CA 安全的原则：
+
+* 证书无法伪造
+* 这书私钥不能泄露
+* 域名管理权不能泄露
+* CA 遵守原则
+
+> 浏览器开发者工具中查看 这书 信息：
+> 在 浏览器的开发者工具 -> Security 点击 View Certificate 就可以查看 这书 信息。
+> 
+> Mac OS 中查看本机中受信任的证书：
+打开 钥匙串访问（keycha）程序 -> 系统跟证书 就可以查看系统中所有受信任的证书
+
+### 5.3 部署 HTTPS 的网站
+
+[https配置与部署 - 向上爬的蜗牛 - CSDN博客](https://blog.csdn.net/abld99/article/details/74011487)
 
 ## 6. 用户密码安全问题
 
