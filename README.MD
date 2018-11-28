@@ -289,19 +289,19 @@ originalText += decipher.final('utf8');
 > * 通过点击能进行的操作都可以通过点击劫持进行
 
 ### 4.1 点击劫持的原理
-将目标网站作为一个 iframe 嵌入到攻击者网站中，并在视觉上进行隐藏（如调整透明度），用户看不见这个 iframe。对用户的点击进行引导，使用户进行一些指定的操作（如某种游戏），从而实现特定的目的（如银行转账）。  
+将目标网站作为一个 iframe 嵌入到攻击者网站中，并在视觉上进行隐藏（如调整透明度），用户看不见这个 iframe。对用户的点击进行引导，使用户进行一些指定的操作（如某种游戏），从而实现特定的目的（如银行转账）。  
 
 ### 4.2 点击劫持的前提
-目标网站能够被攻击网站嵌套在 iframe 中。  
+目标网站能够被攻击网站嵌套在 iframe 中。  
 
 ### 4.3 点击劫持的防御
-未内嵌的网站与内嵌网站的区别在于，未内嵌的网站的 `top === window` 和 `top.location === window.location` 均为 `true`。而在 iframe 中 `top` 指向最外层的 `window`，`window` 指向 iframe 本身，结果为 `false`。
+未内嵌的网站与内嵌网站的区别在于，未内嵌的网站的 `top === window` 和 `top.location === window.location` 均为 `true`。而在 iframe 中 `top` 指向最外层的 `window`，`window` 指向 iframe 本身，结果为 `false`。
 
 * JavaScript 禁止内嵌
 ```javascript
 /** 
 * JavaScript 禁止内嵌
-* 此方法的问题在于 HTML5 iframe 中有一个新的属性
+* 此方法的问题在于 HTML5 iframe 中有一个新的属性
 * [sandbox](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/iframe)
 * sandbox='allow-forms' 时可以正常提交表单，但不会执行脚本，导致此方法失效
 */
