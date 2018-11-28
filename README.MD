@@ -1,6 +1,6 @@
 # Web 安全(Web Security)
 
-> 前置条件：  
+> 前置知识：  
 > * 原生 JavaScript
 > * 少量 Node.js 基础
 > * HTTP 基础知识( Cookies / Session )
@@ -20,7 +20,7 @@ XSS攻击注入点：
 ### 1.1 HTML节点内容  
 可对用户输入进行转译处理
 
-### 1.2 HTML属性
+#### 1.1.1 HTML属性
 ```javascript
 /**
  * 对 HTML 节点内容及属性进行 XSS 攻击的预防代码
@@ -40,12 +40,12 @@ var escapeHTMLProperty = function( str ) {
     return str;
 }
 ```
-### 1.3 JavaScript代码  
-JavaScript中可以直接使用 `JSON.stringify( str )` 方法进行转译
+#### 1.1.2 JavaScript 代码  
+JavaScript 中可以直接使用 `JSON.stringify( str )` 方法进行转译
 
-### 1.4 富文本
+### 1.2 富文本
 采用过滤的方式进行防御
-1. 黑名单过滤
+#### 1.2.1 黑名单过滤
 ```javascript
 /**
 * 采用 黑名单过滤 对富文本内容进行过滤
@@ -61,7 +61,7 @@ var xssFilter = function ( html ) {
     return html;
 }
 ```
-2. 白名单过滤
+#### 1.2.2 白名单过滤
 白名单过滤需要先解析 HTML。  
 **方法一**：这里采用 [cheerio](https://cheerio.js.org) 这个库进行解析。(cheerio的使用与 jQuery 类似，比较容易上手)
 ```shell
@@ -114,7 +114,7 @@ var xssFilter = function ( html ) {
 }
 ```
 
-### 1.5 [CSP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP) (Content Security Policy)：内容安全策略
+### 1.3 [CSP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP) (Content Security Policy)：内容安全策略
 可指定可执行的内容。  
 ```html
 <-这只是一个示例，具体的写法以及参数的意义请参见上方的链接->
@@ -284,6 +284,34 @@ originalText += decipher.final('utf8');
 ## 4. 点击劫持
 
 **点击劫持**：是一种常见的利用用户的身份，在用户不知情的情况下完成操作的一种攻击
+> 点击劫持的特点：
+> * 用户操作，但不知情
+> * 通过点击能进行的操作都可以通过点击劫持进行
+
+### 4.1 点击劫持的原理
+将目标网站作为一个 iframe 嵌入到攻击者网站中，并在视觉上进行隐藏（如调整透明度），用户看不见这个 iframe。对用户的点击进行引导，使用户进行一些指定的操作（如某种游戏），从而实现特定的目的（如银行转账）。  
+
+### 4.2 点击劫持的前提
+目标网站能够被攻击网站嵌套在 iframe 中。  
+
+### 4.3 点击劫持的防御
+未内嵌的网站与内嵌网站的区别在于，未内嵌的网站的 `top === window` 和 `top.location === window.location` 均为 `true`。而在 iframe 中 `top` 指向最外层的 `window`，`window` 指向 iframe 本身，结果为 `false`。
+
+* JavaScript 禁止内嵌
+```javascript
+/** 
+* JavaScript 禁止内嵌
+* 此方法的问题在于 HTML5 iframe 中有一个新的属性
+* [sandbox](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/iframe)
+* sandbox='allow-forms' 时可以正常提交表单，但不会执行脚本，导致此方法失效
+*/
+if ( top.location !== window.location ) {
+    top.location = window.location;
+}
+```
+* [X-FRAME-OPTIONS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/X-Frame-Options) 禁止内嵌（推荐）
+* 辅助手段 [2.2 在前端页面加入验证信息](###-2.2-在前端页面加入验证信息)
+
 
 ## 5. 传输过程安全问题
 
