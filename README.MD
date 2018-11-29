@@ -197,7 +197,7 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 * 路径：指定 Cookies 作用于网站上的哪一级，具体为 URL 的层级。可以为不同层级的 URL 设置不同的 Cookies，只有当这个层级的页面被访问时对应的 Cookies 才能被访问。
 * http-only：Cookies 只能被 HTTP协议 使用。
 * Secure：指定 Cookies 是否只能在 HTTPS 的网站中使用，指定后在 HTTP 的网站中则不能使用。
-* SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](#21-SameSite-Cookie,防止-CSRF-攻击))
+* SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](#21-samesite-cookie防止-csrf-攻击))
 > 浏览器开发者工具中查看 Cookies 信息：
 > 在 浏览器的开发者工具 -> Application/存储空间 -> Cookies 就可以找到 Cookies 信息。
 > * Name（名称）: 健
