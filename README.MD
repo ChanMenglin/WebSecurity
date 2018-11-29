@@ -197,7 +197,7 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 * 路径：指定 Cookies 作用于网站上的哪一级，具体为 URL 的层级。可以为不同层级的 URL 设置不同的 Cookies，只有当这个层级的页面被访问时对应的 Cookies 才能被访问。
 * http-only：Cookies 只能被 HTTP协议 使用。
 * Secure：指定 Cookies 是否只能在 HTTPS 的网站中使用，指定后在 HTTP 的网站中则不能使用。
-* SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](###-2.1-SameSite-Cookie,防止-CSRF-攻击))
+* SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](#21-SameSite-Cookie,防止-CSRF-攻击))
 > 浏览器开发者工具中查看 Cookies 信息：
 > 在 浏览器的开发者工具 -> Application/存储空间 -> Cookies 就可以找到 Cookies 信息。
 > * Name（名称）: 健
@@ -285,17 +285,17 @@ export session;
 #### 3.5.2 Cookies 和 XSS 的关系
 
 * XSS 可能偷取 Cookies
-* http-only 的 Cookies 不会被偷（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
+* http-only 的 Cookies 不会被偷（[3.2 Cookies 的特性](#32-Cookies-的特性)）
 
 #### 3.5.3 Cookies 和 CSRF 的关系
 
 * CSRF 利用了用户 Cookies
-* 攻击站点无法读写 Cookies（[2.2 在前端页面加入验证信息](###-2.2-在前端页面加入验证信息)）
-* 最好能阻止第三方使用 Cookies（[2.1 SameSite Cookie，防止 CSRF 攻击](###-2.1-SameSite-Cookie,防止-CSRF-攻击)）
+* 攻击站点无法读写 Cookies（[2.2 在前端页面加入验证信息](#22-在前端页面加入验证信息)）
+* 最好能阻止第三方使用 Cookies（[2.1 SameSite Cookie，防止 CSRF 攻击](#21-SameSite-Cookie,防止-CSRF-攻击)）
 
 ### 3.6 Cookies 安全策略
 
-* 签名防篡改（[3.5.1 生成用户凭证](####-3.5.1-生成用户凭证)）
+* 签名防篡改（[3.5.1 生成用户凭证](#351-生成用户凭证)）
 * 私有变换（加密）
 
 ```javascript
@@ -319,9 +319,9 @@ originalText += decipher.final('utf8');
 // 加密和解密过程均为流式输出，因此要采用 += 接收，否则只会有部分内容。
 ```
 
-* heep-only（防止XSS）（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
-* secure（防止传输过程中的窃听）（[3.2 Cookies 的特性](###-3.2-Cookies-的特性)）
-* SameSite（[2.1 SameSite Cookie，防止 CSRF 攻击](###-2.1-SameSite-Cookie,防止-CSRF-攻击)）
+* heep-only（防止XSS）（[3.2 Cookies 的特性](#32-Cookies-的特性)）
+* secure（防止传输过程中的窃听）（[3.2 Cookies 的特性](#32-Cookies-的特性)）
+* SameSite（[2.1 SameSite Cookie，防止 CSRF 攻击](#21-SameSite-Cookie,防止-CSRF-攻击)）
 
 ## 4. 点击劫持
 
@@ -357,7 +357,7 @@ if ( top.location !== window.location ) {
 ```
 
 * [X-FRAME-OPTIONS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/X-Frame-Options) 禁止内嵌（推荐）
-* 辅助手段 [2.2 在前端页面加入验证信息](###-2.2-在前端页面加入验证信息)
+* 辅助手段 [2.2 在前端页面加入验证信息](#22-在前端页面加入验证信息)
 
 
 ## 5. 传输过程安全问题
@@ -485,7 +485,7 @@ export password;
 
 #### 6.3.1 HTTPS传输
 
-[5.3 部署 HTTPS 的网站](###-5.3-部署-HTTPS-的网站)
+[5.3 部署 HTTPS 的网站](#53-部署-HTTPS-的网站)
 
 #### 6.3.2 频率限制（防猜解）
 
