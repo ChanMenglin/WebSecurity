@@ -5,6 +5,7 @@
 > * 少量 Node.js 基础
 > * HTTP 基础知识( Cookies / Session )
 > * Web 后端基础知识( HTTP / SQL )
+> * SQL 及 关系型数据库 基础
 
 * 私密性
 * 可靠性
@@ -291,7 +292,7 @@ export session;
 
 * CSRF 利用了用户 Cookies
 * 攻击站点无法读写 Cookies（[2.2 在前端页面加入验证信息](#22-在前端页面加入验证信息)）
-* 最好能阻止第三方使用 Cookies（[2.1 SameSite Cookie，防止 CSRF 攻击](#21-SameSite-Cookie,防止-CSRF-攻击)）
+* 最好能阻止第三方使用 Cookies（[2.1 SameSite Cookie，防止 CSRF 攻击](#21-samesite-cookie防止-csrf-攻击)）
 
 ### 3.6 Cookies 安全策略
 
@@ -321,7 +322,7 @@ originalText += decipher.final('utf8');
 
 * heep-only（防止XSS）（[3.2 Cookies 的特性](#32-Cookies-的特性)）
 * secure（防止传输过程中的窃听）（[3.2 Cookies 的特性](#32-Cookies-的特性)）
-* SameSite（[2.1 SameSite Cookie，防止 CSRF 攻击](#21-SameSite-Cookie,防止-CSRF-攻击)）
+* SameSite（[2.1 SameSite Cookie，防止 CSRF 攻击](#21-samesite-cookie防止-csrf-攻击)）
 
 ## 4. 点击劫持
 
@@ -520,6 +521,105 @@ const password = md5(password)
 * 唯一性 - 终身唯一，无法改变（一旦被破解很难改变）
 
 ## 7. SQL注入攻击
+
+### 7.1 SQL 注入危害
+
+* 猜解密码
+* 获取数据
+* 删库删表
+* 拖库
+
+### 7.2 SQL 注入防御
+
+* 关闭错误输出（不要将错误信息抛到前台，应做模糊处理）
+* 检查数据类型（对传入 SQL 的数据做类型检查，包括用户输入的和层序获取的，以防篡改）
+* 对数据进行转译（转译不能防止所有的 SQL 注入）
+
+```javascript
+const mysql = require('mysql');
+exports.getConnection = function(){
+    /** 
+     * 此为 Mysql 对象
+    */
+    let connection = mysql.createConnection({
+        host: 'localhost',
+        database: 'safety',
+        user: 'root',
+        password: '123456789'
+    });
+    connection.connect();
+    return connection;
+};
+
+// 参数转译方法
+connection.escape(id);
+// 一、转译 SQL 语句
+`select * from table where id = ${ connection.escape(id) }`
+// 二、通过类似参数化查询，在传递参数前会进行转译
+`select * from table where id ?`, [id]
+```
+
+* 使用参数化查询（避免 SQL 注入威胁）  
+
+[mysql2](https://github.com/brianmario/mysql2) 可以支持 MySQL 参数化查询，从而避免 SQL 注入的威胁。mysql2 为第三方工具，向下兼容 mysql
+
+* 使用 [ORM（对象关系映射）](https://zh.wikipedia.org/wiki/%E5%AF%B9%E8%B1%A1%E5%85%B3%E7%B3%BB%E6%98%A0%E5%B0%84)  
+
+[Sequelize](https://demopark.github.io/sequelize-docs-Zh-CN/) | [Github](https://github.com/sequelize/sequelize) ：是一个Node.js ORM, 目前支持 Postgres, MySQL, SQLite 和 Microsoft SQL Server.  
+安装 Sequelize
+
+```bash
+# 安装 Sequelize
+npm install --save-dev Sequelize
+# 还有以下之一:
+$ npm install --save pg pg-hstore // Postgres
+$ npm install --save mysql2 // MySQL
+$ npm install --save sqlite3 // SQLite
+$ npm install --save tedious // MSSQL
+```
+
+```javascript
+/**
+ * sequelize.js
+ * Sequelize 实例
+ * 此处引入的为刚才安装的 sequelize 第三方库
+ */
+import Sequelize from 'sequelize';
+
+let sequelize = new Sequelize({
+    host: 'localhost',
+    database: 'safety',
+    username: 'root',
+    define: {
+        freezeTableName: true,
+    },
+});
+export sequelize;
+// -------------------------------------------
+/**
+ * Post.js
+ * 使用 Sequelize 定义的数据模型
+ * 此处引入的为刚才创建的 sequelize 实例sequelize.js，
+ * 此处一定注意区分
+ */
+import sequelize from './sequelize'; // 实例
+import Sequelize from 'sequelize'；// 模块
+
+var Post = sequelize.define('post', {
+    // 字段
+},
+{
+    // 此处可不加
+    // 如果添加 则为指定表名
+    // 如果不加 sequelize 会尝试对应表名
+    tableName: 'post'.
+});
+export Post;
+```
+
+### 7.3 NoSQL 注入和防御
+
+[mongoose](https://mongoosejs.com) | [Github](https://github.com/Automattic/mongoose)
 
 ## 8. 信息泄露和社会工程学
 
