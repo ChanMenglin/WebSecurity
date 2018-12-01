@@ -21,7 +21,7 @@
 
 ## 1. 跨站脚本攻击 XSS (Cross Site Scripting) 
 
-XSS攻击注入点：
+XSS攻击原理：来自用户的数据被当作脚本在页面中执行  
 
 ### 1.1 HTML节点内容
 
@@ -135,6 +135,8 @@ var xssFilter = function ( html ) {
 ```
 
 ### 1.3 [CSP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP) (Content Security Policy)：内容安全策略
+
+CSRF原理：在用户不知情的倩况下冒充用户身份对目标网站发送请求。
 
 可指定可执行的内容。
 
@@ -621,6 +623,95 @@ export Post;
 
 [mongoose](https://mongoosejs.com) | [Github](https://github.com/Automattic/mongoose)
 
-## 8. 信息泄露和社会工程学
+## 8. 上传问题（接入层）
 
-## 9. 其他安全问题
+### 8.1 上传文件的问题
+
+* 文件由用户上传
+* 用户能够通过 Url 访问上传的文件
+* 访问时文件可能会当作程序执行
+
+### 8.2 上传漏洞防御
+
+#### 8.2.1 限制上传后缀（有时不可靠）
+
+```javascript
+/**
+* 禁止用户上传 JS 文件（有时此方法会不可靠）
+* 此处只做演示，在 Nodejs 环境中几乎没有上传漏洞
+* 但在如 PHP 中，上传漏洞较为严重
+* 不同语言的文件处理不同，需要不同的防御方式
+*/
+import path from 'path';
+// file 为上传的文件对象
+// 此处为取文件后缀名
+const ext = path.extname(file.name);
+if (ext === 'js') throw new Error('不能上传js文件');
+```
+
+### 8.2.2 文件类型检查（可绕过）
+
+```javascript
+/**
+* 文件类型检查（此方法为浏览器提供，可绕过）
+* 不同语言的文件处理不同，需要不同的防御方式
+*/
+if (file.type !== 'image/png') throw new Error('上传的文件类型错误');
+```
+
+### 8.2.3 文件内容检查（可欺骗）
+
+```javascript
+/** 
+* 文件内容检查（可欺骗）
+* 由于同一类型文件的前几位二进制位是相同的，可以根据此特性进行判断
+* 但可通过修改文件前几位让层序误判文件类型
+*/
+import fs from 'fs';
+
+const fileBuffer = fs.readFileSync(file.path);
+fileBuffer[0] == ox5b;
+```
+
+### 8.2.4 程序输出（防止文件被当作程序执行）
+
+在访问莫文件时不直接输出，而是通过程序读取文件再输出，从而阻止了文件的执行。Node.js 的 fs 模块就是采用的这种方式，因此在 Node.js 中几乎不存在上传文件漏洞，在其他环境中可以使用此方法进行防御。此方法会有一定的性能损失。
+
+```javascript
+import fs from 'fs';
+
+fs.readFileSync(filePath);
+```
+
+#### 8.2.5 权限控制 - 可写可执行互斥
+
+对目录文件权限进行控制，可写（如用户上传的文件）目录中的不给予执行权限，可执行（如程序文件）目录不给予写入权限，防止攻击中篡改和注入。
+
+## 9. 信息泄露和社会工程学
+
+### 9.1 信息泄露
+
+* 泄露系统的敏感信息
+* 泄露用户的敏感信息
+
+### 8.2 信息泄露的途径
+
+* SQL注入
+* XSS / CSRF
+* 错误信息失控：将错误信息直接暴露
+* 水平权限控制不当：系统中用户权限管理不当
+
+### 8.3 信息保护
+
+[OAuth 思想](https://zh.wikipedia.org/wiki/%E5%BC%80%E6%94%BE%E6%8E%88%E6%9D%83)
+
+* 一切行为由用户授权
+* 授权行为不泄露敏感信息（请求授权的网站只能拿到 token，根据此 token 确认用户身份）
+* 授权会过期
+
+使用 OAuth 思想 防止数据泄露
+
+* 用户授权读取资料
+* 无授权资料不可读取
+* 不允许批量获取数据
+* 数据接口可风控审计
