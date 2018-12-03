@@ -7,16 +7,6 @@
 > * Web 后端基础知识( HTTP / SQL )
 > * SQL 及 关系型数据库 基础
 
-* 私密性
-* 可靠性
-
----
-
-* 代码层面
-* 架构层面
-* 运维层面
-
----
 [MDN Web 文档 - Web 安全](https://developer.mozilla.org/zh-CN/docs/Web/Security)
 
 ## 1. 跨站脚本攻击 XSS (Cross Site Scripting) 
