@@ -9,7 +9,7 @@
 
 [MDN Web 文档 - Web 安全](https://developer.mozilla.org/zh-CN/docs/Web/Security)
 
-# 目录（Content）
+# 目录（Contents）
 
 * [1. 跨站脚本攻击 XSS (Cross Site Scripting)](#1-跨站脚本攻击-xss-cross-site-scripting)
     * [1.1 HTML节点内容](#11-html节点内容)
