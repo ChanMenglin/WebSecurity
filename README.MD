@@ -234,7 +234,7 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 
 ### 3.1 Cookies 的特点
 
-* 前端数据存储
+* 前端数据存储（大小：4kb 左右）
 * 后端可通过 http 头进行设置
 * 请求时通过 http 头传给后端
 * 前端可读写
@@ -247,7 +247,7 @@ var csrfToken = parseInt(Math.random() * 9999999, 10);
 * 域名：指定 Cookies 的使用范围。
 * 有效期：指定 Cookies 的有效期，过期后就会失效。
 * 路径：指定 Cookies 作用于网站上的哪一级，具体为 URL 的层级。可以为不同层级的 URL 设置不同的 Cookies，只有当这个层级的页面被访问时对应的 Cookies 才能被访问。
-* http-only：Cookies 只能被 HTTP协议 使用。
+* http-only：Cookies 只能被 HTTP协议 使用，不能被 JavaScript 读取。
 * Secure：指定 Cookies 是否只能在 HTTPS 的网站中使用，指定后在 HTTP 的网站中则不能使用。
 * SameSite：指定第三方网站的请求是否可以使用 Cookies。([2.1 SameSite Cookie，防止 CSRF 攻击](#21-samesite-cookie防止-csrf-攻击))
 > 浏览器开发者工具中查看 Cookies 信息：
