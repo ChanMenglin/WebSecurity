@@ -1,5 +1,0 @@
-.DS_Store
-jspm_packages
-package-lock.json
-node_modules
-node_modules/*
