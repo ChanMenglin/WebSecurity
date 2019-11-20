@@ -65,8 +65,9 @@
         * [8.2.5 权限控制 - 可写可执行互斥](#825-权限控制---可写可执行互斥)
 * [9. 信息泄露和社会工程学](#9-信息泄露和社会工程学)
     * [9.1 信息泄露](#91-信息泄露)
-    * [8.2 信息泄露的途径](#82-信息泄露的途径)
-    * [8.3 信息保护](#83-信息保护)
+    * [9.2 信息泄露的途径](#92-信息泄露的途径)
+    * [9.3 信息保护](#93-信息保护)
+* [10 安全策略](#10-安全策略)
 
 ## 1. 跨站脚本攻击 XSS (Cross Site Scripting)
 
@@ -411,6 +412,10 @@ if ( top.location !== window.location ) {
 * [X-FRAME-OPTIONS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/X-Frame-Options) 禁止内嵌（推荐）
 * 辅助手段 [2.2 在前端页面加入验证信息](#22-在前端页面加入验证信息)
 
+* IFrame 安全策略（允许内嵌）
+
+[IFrame 沙盒](https://www.html5rocks.com/en/tutorials/security/sandboxed-iframes/)
+
 ## 5. 传输过程安全问题
 
 HTTP 传输窃听和篡改：由于 HTTP 采用明文传输信息，导致请求发送过程中的所有设备（浏览器、代理服务器、链路、服务器等）均可读取甚至篡改发送的数据。
@@ -742,16 +747,16 @@ fs.readFileSync(filePath);
 * 泄露系统的敏感信息
 * 泄露用户的敏感信息
 
-### 8.2 信息泄露的途径
+### 9.2 信息泄露的途径
 
 * SQL注入
 * XSS / CSRF
 * 错误信息失控：将错误信息直接暴露
 * 水平权限控制不当：系统中用户权限管理不当
 
-### 8.3 信息保护
+### 9.3 信息保护
 
-[OAuth 思想](https://zh.wikipedia.org/wiki/%E5%BC%80%E6%94%BE%E6%8E%88%E6%9D%83)
+[OAuth 思想](https://zh.wikipedia.org/wiki/%E5%BC%80%E6%94%BE%E6%8E%88%E6%9D%83)~
 
 * 一切行为由用户授权
 * 授权行为不泄露敏感信息（请求授权的网站只能拿到 token，根据此 token 确认用户身份）
@@ -763,3 +768,12 @@ fs.readFileSync(filePath);
 * 无授权资料不可读取
 * 不允许批量获取数据
 * 数据接口可风控审计
+
+## 10 安全策略
+
+1. [内容安全策略简介](https://www.html5rocks.com/en/tutorials/security/content-security-policy/)  
+2. [IFrame 沙盒](https://www.html5rocks.com/en/tutorials/security/sandboxed-iframes/)
+
+---
+
+[context](https://www.contextis.com/en/resources)
